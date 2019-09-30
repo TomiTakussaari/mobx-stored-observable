@@ -23,6 +23,7 @@ class SessionStore {
 
   private readonly _sessionData: SessionData;
   private readonly loadInitialValue: () => void;
+  private readonly disposer: () => void;
   private readonly sessionService = new SessionService();
 
   constructor() {
@@ -32,19 +33,20 @@ class SessionStore {
       userId: null,
       username: null,
     };
-    const [observableValue, loadInitialValue] = storedObservable<SessionData>(
+    const { value, loadInitialValue, disposer } = storedObservable<SessionData>(
         { initialValue, key: 'session', storageType: 'localStorage'},
     );
     this._sessionData = observableValue;
     this.loadInitialValue = loadInitialValue;
     this.resolveSessionData = this.resolveSessionData.bind(this);
     this.logout = this.logout.bind(this);
+    this.disposer = disposer;
   }
 
   public async resolveSessionStatus(): Promise<SessionData> {
     // read persisted data from storage (when app starts) if needed
     this.loadInitialValue();
-    // read session from server
+    // read session from server when app starts
     const newSessionData = await this.authenticationService.getSessionData();
     this.setSessionData(newSessionData);
     return this.sessionData;
@@ -59,7 +61,11 @@ class SessionStore {
     await sessionService.logout();
     // clear local userinfo state. Other browser tabs will logout user too. 
     this.setSessionData({ name: null, userId: null, username: null });
+
+    // stop persiting changes to localstorage, and tracking changes
+    this.disposer();
   }
+  
 
   @computed
   public get sessionData(): SessionData {

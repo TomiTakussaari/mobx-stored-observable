@@ -9,7 +9,7 @@
         "build": "tsc",
         "lint": "yarn lint:ts",
         "lint:ts": "yarn lint:ts:nofix --fix",
-        "lint:ts:nofix": "tslint \"src/**/*.ts\" \"src/**/*.tsx\"",
+        "lint:ts:nofix": "tslint -p tsconfig.json \"src/**/*.ts\" \"src/**/*.tsx\"",
         "test": "jest",
         "test:update-snapshots": "jest --updateSnapshot",
         "test:watch": "jest --watch",
@@ -44,7 +44,7 @@
     "jest": {
         "globals": {
             "ts-jest": {
-                "diagnostics": true,
+                "diagnostics": false,
                 "tsConfig": "tsconfig.jest.json"
             }
         },

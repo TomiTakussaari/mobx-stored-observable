@@ -3,7 +3,9 @@ import noop from 'lodash/noop';
 import { action, autorun, IObservableObject, observable, runInAction, toJS } from 'mobx';
 import getStorage, { StorageType } from './get-web-storage';
 
-type OnUpdate<T> = (newValue: T, observable: T) => void;
+type OnUpdate<T> = (newValue: T, observable: T & IObservableObject) => void;
+type LoadInitialValue = () => void;
+type Disposer = () => void;
 
 export interface StoredObservableOptions<T> {
   key: string;
@@ -13,7 +15,11 @@ export interface StoredObservableOptions<T> {
   onUpdate?: OnUpdate<T>;
 }
 
-type StoredObservable<T> = [T, () => void];
+type StoredObservable<T> = {
+  value: T & IObservableObject;
+  loadInitialValue: LoadInitialValue;
+  disposer: Disposer;
+};
 
 export function storedObservable<T>(options: StoredObservableOptions<T>): StoredObservable<T> {
   const mergedOptions = { ...defaultOptions(), ...options };
@@ -25,18 +31,23 @@ export function storedObservable<T>(options: StoredObservableOptions<T>): Stored
 
     const loadInitialValueFromStorage = createInitialValueLoader(key, storage, obsVal);
 
-    autorun(
+    const autoRunDisposer = autorun(
       () => {
         setItem(key, obsVal, storage);
       },
       { delay: debounce },
     );
+    const onStorage = createOnStorage(key, storage, onUpdate, obsVal);
+    window.addEventListener('storage', onStorage, false);
 
-    window.addEventListener('storage', createOnStorage(key, storage, onUpdate, obsVal), false);
+    const disposer = () => {
+      autoRunDisposer();
+      window.removeEventListener('storage', onStorage, false);
+    };
 
-    return [obsVal, loadInitialValueFromStorage];
+    return { disposer, value: obsVal, loadInitialValue: loadInitialValueFromStorage };
   }
-  return [obsVal, noop];
+  return { value: obsVal, loadInitialValue: noop, disposer: noop };
 }
 
 function defaultOnUpdate<T>(newValue: T, observable: IObservableObject): void {
