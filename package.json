@@ -1,0 +1,93 @@
+{
+    "name": "mobx-stored-observable",
+    "version": "0.0.2",
+    "engines": {
+        "node": "10"
+    },
+    "license": "MIT",
+    "scripts": {
+        "build": "tsc",
+        "lint": "yarn lint:ts",
+        "lint:ts": "yarn lint:ts:nofix --fix",
+        "lint:ts:nofix": "tslint \"src/**/*.ts\" \"src/**/*.tsx\"",
+        "test": "jest",
+        "test:update-snapshots": "jest --updateSnapshot",
+        "test:watch": "jest --watch",
+        "test:coverage": "jest --coverage",
+        "prepare": "tsc"
+    },
+    "dependencies": {
+        "lodash": "^4.17.15",
+        "mobx": "^5.13.1"
+    },
+    "description": "Mobx observable that is persisted in web storage",
+    "types": "lib/index.d.ts",
+    "main": "lib/index.js",
+    "files": [
+        "lib/**/*"
+    ],
+    "devDependencies": {
+        "@smartive/tslint-config": "7.0.1",
+        "@types/jest": "24.0.18",
+        "@types/lodash": "^4.14.141",
+        "husky": "3.0.4",
+        "jest": "24.9.0",
+        "jest-localstorage-mock": "^2.4.0",
+        "jest-transform-stub": "^2.0.0",
+        "lint-staged": "9.2.3",
+        "ts-jest": "24.1.0",
+        "ts-node": "8.4.1",
+        "tslint": "5.20.0",
+        "tslint-config-prettier": "1.18.0",
+        "typescript": "3.6.3"
+    },
+    "jest": {
+        "globals": {
+            "ts-jest": {
+                "diagnostics": true,
+                "tsConfig": "tsconfig.jest.json"
+            }
+        },
+        "setupFiles": [
+            "<rootDir>/.jest/setup.ts"
+        ],
+        "transform": {
+            "^.+\\.tsx?$": "ts-jest",
+            ".+\\.(png|jpg|jpeg|svg|html)$": "jest-transform-stub"
+        },
+        "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+        "testPathIgnorePatterns": [
+            "/node_modules/"
+        ],
+        "cacheDirectory": ".jest_cache/",
+        "moduleFileExtensions": [
+            "ts",
+            "tsx",
+            "js",
+            "json"
+        ],
+        "collectCoverage": false,
+        "coverageReporters": [
+            "lcov",
+            "text",
+            "html"
+        ],
+        "modulePathIgnorePatterns": [
+            ".yarn_cache"
+        ]
+    },
+    "lint-staged": {
+        "*.{ts,tsx}": [
+            "tslint --fix",
+            "git add"
+        ],
+        "*.{js,jsx}": [
+            "git add"
+        ]
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
+    }
+}

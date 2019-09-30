@@ -1,0 +1,16 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "@smartive/tslint-config/tslint-react"
+    ],
+    "rules": {
+        "no-console": [
+            false
+        ],
+        "import-blacklist": [
+            true,
+            "lodash"
+        ]
+    }
+}
+

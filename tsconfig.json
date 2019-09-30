@@ -1,0 +1,32 @@
+{
+    "compileOnSave": false,
+    "include": ["src/**/*"],
+    "exclude": [
+        "node_modules",
+        "**/*.test.*"
+    ],
+    "compilerOptions": {
+        "outDir": "./lib",
+        "target": "es2017",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "allowSyntheticDefaultImports": true,
+        "declaration": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitAny": true,
+        "removeComments": false,
+        "preserveConstEnums": true,
+        "sourceMap": true,
+        "skipLibCheck": true,
+        "rootDirs": ["src", "stories"],
+        "baseUrl": "src",
+        "typeRoots": [
+            "./node_modules/@types",
+            "./src/typings"
+        ],
+        "lib": ["dom","es2017"]
+    }
+}

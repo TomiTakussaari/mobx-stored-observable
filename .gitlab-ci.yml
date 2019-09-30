@@ -1,0 +1,29 @@
+image: node:11.10
+
+variables:
+  AWS_DEFAULT_REGION: eu-west-1
+
+# Global cache settings. Most jobs can just pull node_modules/
+cache: &cache_settings
+  policy: pull
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+    - .jest_cache/
+
+stages:
+  - verify
+
+build-and-verify:
+  stage: verify
+  dependencies: []
+  retry: 2
+  cache:
+    <<: *cache_settings
+    policy: pull-push
+  coverage: '/^All files\s+\|\s+\d+\.*\d*\s+\|\s*(\d+\.*\d*)/'
+  script:
+    - yarn --frozen-lockfile
+    - yarn lint:ts:nofix
+    - yarn build
+    - yarn test --coverage

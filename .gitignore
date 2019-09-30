@@ -1,0 +1,12 @@
+.idea
+*.iml
+node_modules
+lib
+site
+
+.jest_cache
+
+package-lock.json
+yarn-error.log
+.yarnrc
+.npmrc
