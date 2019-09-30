@@ -66,7 +66,7 @@
             "js",
             "json"
         ],
-        "collectCoverage": false,
+        "collectCoverage": true,
         "coverageReporters": [
             "lcov",
             "text",

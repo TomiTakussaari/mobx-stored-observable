@@ -271,6 +271,7 @@ describe('storedObservable function', () => {
     runInAction(() => {
       value.foo = 'bar3';
     });
+    jest.runAllTimers();
     expect(localStoreValues.get('key')).toEqual(JSON.stringify({ foo: 'bar2' }));
     expect(value.foo).toEqual('bar3');
   });
