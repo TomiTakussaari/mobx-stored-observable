@@ -31,18 +31,19 @@ export function storedObservable<T>(options: StoredObservableOptions<T>): Stored
 
     const loadInitialValueFromStorage = createInitialValueLoader(key, storage, obsVal);
 
-    const autoRunDisposer = autorun(
+    const stopPersistingChanges = autorun(
       () => {
         setItem(key, obsVal, storage);
       },
       { delay: debounce },
     );
+    const eventListenerOpts = false;
     const onStorage = createOnStorage(key, storage, onUpdate, obsVal);
-    window.addEventListener('storage', onStorage, false);
+    window.addEventListener('storage', onStorage, eventListenerOpts);
 
     const disposer = () => {
-      autoRunDisposer();
-      window.removeEventListener('storage', onStorage, false);
+      window.removeEventListener('storage', onStorage, eventListenerOpts);
+      stopPersistingChanges();
     };
 
     return { disposer, value: obsVal, loadInitialValue: loadInitialValueFromStorage };
