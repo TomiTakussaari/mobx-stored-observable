@@ -1,7 +1,7 @@
 # Mobx-stored-observable
 [![Build Status](https://travis-ci.org/TomiTakussaari/mobx-stored-observable.svg?branch=master)](https://travis-ci.org/TomiTakussaari/mobx-stored-observable)
-[![NPM Version](https://img.shields.io/npm/v/mobx-stored-observable)]()
-[![Size](https://img.shields.io/bundlephobia/minzip/mobx-stored-observable)]()
+[![NPM Version](https://img.shields.io/npm/v/mobx-stored-observable)](https://www.npmjs.com/package/mobx-stored-observable)
+[![Size](https://img.shields.io/bundlephobia/minzip/mobx-stored-observable)](https://bundlephobia.com/result?p=mobx-stored-observable)
 
 
 Mobx Observables that are persisted in web storage (local or session storage).
