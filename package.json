@@ -1,10 +1,14 @@
 {
     "name": "mobx-stored-observable",
     "version": "0.0.4",
+    "homepage": "https://github.com/TomiTakussaari/mobx-stored-observable",
     "engines": {
         "node": "10"
     },
     "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/TomiTakussaari/mobx-stored-observable/issues"
+    },
     "scripts": {
         "build": "tsc",
         "lint": "yarn lint:ts",
