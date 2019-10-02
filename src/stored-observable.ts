@@ -3,7 +3,7 @@ import noop from 'lodash/noop';
 import { action, autorun, IObservableObject, observable, runInAction, toJS } from 'mobx';
 import getStorage, { StorageType } from './get-web-storage';
 
-type OnUpdate<T> = (newValue: T, observable: T & IObservableObject) => void;
+type HandleUpdate<T> = (newValue: T, observable: T & IObservableObject) => void;
 type LoadInitialValue = () => void;
 type Disposer = () => void;
 
@@ -12,7 +12,7 @@ export interface StoredObservableOptions<T> {
   initialValue?: T;
   debounce?: number;
   storageType?: StorageType;
-  onUpdate?: OnUpdate<T>;
+  handleUpdateFromStorage?: HandleUpdate<T>;
 }
 
 type StoredObservable<T> = {
@@ -23,7 +23,7 @@ type StoredObservable<T> = {
 
 export function storedObservable<T>(options: StoredObservableOptions<T>): StoredObservable<T> {
   const mergedOptions = { ...defaultOptions(), ...options };
-  const { storageType, key, onUpdate, initialValue, debounce } = mergedOptions;
+  const { storageType, key, handleUpdateFromStorage, initialValue, debounce } = mergedOptions;
   const storage = getStorage(storageType);
 
   const obsVal = observable(initialValue);
@@ -38,7 +38,7 @@ export function storedObservable<T>(options: StoredObservableOptions<T>): Stored
       { delay: debounce },
     );
     const eventListenerOpts = false;
-    const onStorage = createOnStorage(key, storage, onUpdate, obsVal);
+    const onStorage = createOnStorage(key, storage, handleUpdateFromStorage, obsVal);
     window.addEventListener('storage', onStorage, eventListenerOpts);
 
     const disposer = () => {
@@ -62,12 +62,12 @@ const defaultOptions = (): Partial<StoredObservableOptions<any>> => {
     debounce: 300,
     storageType: 'localStorage',
     initialValue: {},
-    onUpdate: defaultOnUpdate,
+    handleUpdateFromStorage: defaultOnUpdate,
   };
 };
 
 function createOnStorage(
-  key: string, storage: Storage, onUpdate: OnUpdate<any>, observable: IObservableObject): (event: StorageEvent) => void {
+  key: string, storage: Storage, onUpdate: HandleUpdate<any>, observable: IObservableObject): (event: StorageEvent) => void {
   return (event: StorageEvent) => {
     if (event.storageArea === storage) {
       if (event.key === key && event.newValue !== event.oldValue) {
