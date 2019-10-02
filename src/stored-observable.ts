@@ -27,7 +27,7 @@ export function storedObservable<T>(options: StoredObservableOptions<T>): Stored
   const storage = getStorage(storageType);
 
   const obsVal = observable(initialValue);
-  if (typeof storage === 'object' && typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+  if (typeof storage === 'object' && typeof window === 'object' && typeof window.addEventListener === 'function') {
 
     const loadInitialValueFromStorage = createInitialValueLoader(key, storage, obsVal);
 

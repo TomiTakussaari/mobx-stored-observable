@@ -42,7 +42,7 @@ describe('storedObservable function', () => {
     jest.clearAllTimers();
   });
 
-  it('returns observable defaultValue when no window.eventListener', () => {
+  it('returns observable with defaultValue as state when no window.eventListener', () => {
     window.addEventListener = undefined;
     const defaultVal = { foo: 'bar' };
     const options: StoredObservableOptions<any> =  {
@@ -52,7 +52,7 @@ describe('storedObservable function', () => {
     expect(value).toEqual(defaultVal);
   });
 
-  it('returns observable defaultValue when storage is null', () => {
+  it('returns observable with defaultValue as state when storageType is null', () => {
     window.addEventListener = undefined;
     const defaultVal = { foo: 'bar' };
     const options: StoredObservableOptions<any> =  {
@@ -62,7 +62,7 @@ describe('storedObservable function', () => {
     expect(value).toEqual(defaultVal);
   });
 
-  it('registers storage listener when window.eventListener exists', () => {
+  it('registers storage event listener when window.eventListener exists', () => {
     const defaultVal = { foo: 'bar' };
     const options: StoredObservableOptions<any> =  {
       key: 'key', initialValue: defaultVal, storageType: 'localStorage',
@@ -72,7 +72,7 @@ describe('storedObservable function', () => {
     expect(addEventListener).toHaveBeenCalledWith('storage', expect.any(Function), false);
   });
 
-  it('loadInitialValue merges current value from storage with defaults, overriding default properties', () => {
+  it('loadInitialValue merges current value from storage with defaults, overriding properties in default', () => {
     localStorage.setItem('key', JSON.stringify({ fromStorage: true, overrided: 'from-storage' }));
     const defaultVal = { overrided: 'from-default-val', fromDefault: true };
     const options: StoredObservableOptions<any> =  {
@@ -97,7 +97,7 @@ describe('storedObservable function', () => {
     expect(value).toEqual({ val: 'store' });
   });
 
-  it('calls handleUpdateFromStorage callback when on dom storage event happens for same key', () => {
+  it('calls handleUpdateFromStorage callback when onDomStorage event happens for same key', () => {
     const defaultVal = { foo: 'bar' };
     const handleUpdateFromStorage = jest.fn();
     const options: StoredObservableOptions<any> =  {
@@ -131,7 +131,7 @@ describe('storedObservable function', () => {
   it('updates observable itself when handleUpdateFromStorage is omitted from options', async () => {
     const defaultVal = { foo: 'bar' };
     const options: StoredObservableOptions<any> =  {
-      key: 'key', initialValue: defaultVal, debounce: 500, storageType: 'localStorage',
+      key: 'key', initialValue: defaultVal, storageType: 'localStorage',
     };
     const { value } = storedObservable(options);
     expect(value).toEqual(defaultVal);
@@ -145,7 +145,7 @@ describe('storedObservable function', () => {
   it('returned observable can be subscribed to', async () => {
     const defaultVal = { foo: 'bar' };
     const options: StoredObservableOptions<any> =  {
-      key: 'key', initialValue: defaultVal, debounce: 500, storageType: 'localStorage',
+      key: 'key', initialValue: defaultVal, storageType: 'localStorage',
     };
     const { value } = storedObservable(options);
     let fooValue: string = 'initial';
@@ -166,7 +166,7 @@ describe('storedObservable function', () => {
     const defaultVal = { foo: 'bar' };
     const handleUpdateFromStorage = jest.fn();
     const options: StoredObservableOptions<any> =  {
-      handleUpdateFromStorage, key: 'key', initialValue: defaultVal, debounce: 500, storageType: 'localStorage',
+      handleUpdateFromStorage, key: 'key', initialValue: defaultVal, storageType: 'localStorage',
     };
     const { value } = storedObservable(options);
     expect(value).toEqual(defaultVal);
@@ -182,7 +182,7 @@ describe('storedObservable function', () => {
 
     const handleUpdateFromStorage = jest.fn();
     const options: StoredObservableOptions<any> =  {
-      handleUpdateFromStorage, key: 'key', initialValue: defaultVal, debounce: 500, storageType: 'localStorage',
+      handleUpdateFromStorage, key: 'key', initialValue: defaultVal, storageType: 'localStorage',
     };
     const { value } = storedObservable(options);
     expect(value).toEqual(defaultVal);
@@ -197,7 +197,7 @@ describe('storedObservable function', () => {
     const defaultVal = { foo: 'bar' };
     const handleUpdateFromStorage = jest.fn();
     const options: StoredObservableOptions<any> =  {
-      handleUpdateFromStorage, key: 'key', initialValue: defaultVal, debounce: 500, storageType: 'localStorage',
+      handleUpdateFromStorage, key: 'key', initialValue: defaultVal, storageType: 'localStorage',
     };
     const { value } = storedObservable(options);
     expect(value).toEqual(defaultVal);
@@ -213,7 +213,7 @@ describe('storedObservable function', () => {
     const defaultVal = { foo: 'bar' };
     const handleUpdateFromStorage = jest.fn();
     const options: StoredObservableOptions<any> =  {
-      handleUpdateFromStorage, key: 'key', initialValue: defaultVal, debounce: 500, storageType: 'localStorage',
+      handleUpdateFromStorage, key: 'key', initialValue: defaultVal, storageType: 'localStorage',
     };
     const { value } = storedObservable(options);
     expect(value).toEqual(defaultVal);
@@ -229,7 +229,7 @@ describe('storedObservable function', () => {
     const defaultVal = { foo: 'bar' };
     const handleUpdateFromStorage = jest.fn();
     const options: StoredObservableOptions<any> =  {
-      handleUpdateFromStorage, key: 'key', initialValue: defaultVal, debounce: 500, storageType: 'localStorage',
+      handleUpdateFromStorage, key: 'key', initialValue: defaultVal, storageType: 'localStorage',
     };
     const { value } = storedObservable(options);
     expect(value).toEqual(defaultVal);
@@ -243,7 +243,7 @@ describe('storedObservable function', () => {
     const defaultVal = { foo: 'bar' };
     const handleUpdateFromStorage = jest.fn();
     const options: StoredObservableOptions<any> =  {
-      handleUpdateFromStorage, key: 'key', initialValue: defaultVal, debounce: 500, storageType: 'localStorage',
+      handleUpdateFromStorage, key: 'key', initialValue: defaultVal, storageType: 'localStorage',
     };
     const { value } = storedObservable(options);
     expect(value).toEqual(defaultVal);
@@ -258,9 +258,8 @@ describe('storedObservable function', () => {
   it('clears eventListener dispose() is called', () => {
     const defaultVal = { foo: 'bar' };
     const options: StoredObservableOptions<any> =  {
-      key: 'key', initialValue: defaultVal, debounce: 500, storageType: 'localStorage',
+      key: 'key', initialValue: defaultVal, storageType: 'localStorage',
     };
-    // tslint:disable-next-line
     const { disposer } = storedObservable(options);
     expect(addEventListener).toHaveBeenCalledTimes(1);
     expect(addEventListener).toHaveBeenCalledWith('storage', expect.any(Function), false);
@@ -275,7 +274,6 @@ describe('storedObservable function', () => {
     const options: StoredObservableOptions<any> =  {
       key: 'key', initialValue: defaultVal, debounce: 500, storageType: 'localStorage',
     };
-    // tslint:disable-next-line
     const { value, disposer } = storedObservable(options);
     runInAction(() => {
       value.foo = 'bar2';
