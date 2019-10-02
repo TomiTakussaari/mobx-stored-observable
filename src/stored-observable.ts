@@ -54,7 +54,7 @@ export function storedObservable<T>(options: StoredObservableOptions<T>): Stored
   return { value: obsVal, loadInitialValue: noop, disposer: noop };
 }
 
-function defaultOnUpdate<T>(newValue: T, observable: IObservableObject): void {
+function defaultUpdateFromStorageHandler<T>(newValue: T, observable: IObservableObject): void {
   runInAction(() => {
     Object.assign(observable, newValue);
   });
@@ -65,7 +65,7 @@ const defaultOptions = (): Partial<StoredObservableOptions<any>> => {
     debounce: 300,
     storageType: 'localStorage',
     initialValue: {},
-    handleUpdateFromStorage: defaultOnUpdate,
+    handleUpdateFromStorage: defaultUpdateFromStorageHandler,
   };
 };
 

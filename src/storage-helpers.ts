@@ -40,7 +40,7 @@ export function setStorageItem<T>(key: string, value: T, storage: Storage): void
   }
 }
 
-function mergeValuePicker(objValue: any, srcValue: any): any {
+function mergeCustomizer(objValue: any, srcValue: any): any {
   if (objValue && !srcValue) {
     return objValue;
   }
@@ -54,7 +54,7 @@ export function getStorageItem<T>(key: string, storage: Storage, currentValue?: 
     const fromStorageRaw = storage.getItem(key);
     if (fromStorageRaw) {
       const fromStorage = JSON.parse(fromStorageRaw);
-      merge(currentValue, fromStorage, mergeValuePicker);
+      merge(currentValue, fromStorage, mergeCustomizer);
       return currentValue;
     }
   } catch (error) {
