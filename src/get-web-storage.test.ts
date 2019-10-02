@@ -1,4 +1,3 @@
-import 'jest-localstorage-mock';
 import getStorage, { withStorage } from './get-web-storage';
 
 afterEach(() => {

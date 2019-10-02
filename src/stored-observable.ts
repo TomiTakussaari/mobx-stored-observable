@@ -1,11 +1,14 @@
-import merge from 'lodash/merge';
 import noop from 'lodash/noop';
-import { action, autorun, IObservableObject, observable, runInAction, toJS } from 'mobx';
+import { autorun, IObservableObject, observable, runInAction } from 'mobx';
 import getStorage, { StorageType } from './get-web-storage';
-
-type HandleUpdate<T> = (newValue: T, observable: T & IObservableObject) => void;
-type LoadInitialValue = () => void;
-type Disposer = () => void;
+import {
+  createInitialValueLoader,
+  createOnStorageEventHandler,
+  Disposer,
+  HandleUpdate,
+  LoadInitialValue,
+  setStorageItem,
+} from './storage-helpers';
 
 export interface StoredObservableOptions<T> {
   key: string;
@@ -33,12 +36,12 @@ export function storedObservable<T>(options: StoredObservableOptions<T>): Stored
 
     const stopPersistingChanges = autorun(
       () => {
-        setItem(key, obsVal, storage);
+        setStorageItem(key, obsVal, storage);
       },
       { delay: debounce },
     );
     const eventListenerOpts = false;
-    const onStorage = createOnStorage(key, storage, handleUpdateFromStorage, obsVal);
+    const onStorage = createOnStorageEventHandler(key, storage, handleUpdateFromStorage, obsVal);
     window.addEventListener('storage', onStorage, eventListenerOpts);
 
     const disposer = () => {
@@ -65,64 +68,5 @@ const defaultOptions = (): Partial<StoredObservableOptions<any>> => {
     handleUpdateFromStorage: defaultOnUpdate,
   };
 };
-
-function createOnStorage(
-  key: string, storage: Storage, onUpdate: HandleUpdate<any>, observable: IObservableObject): (event: StorageEvent) => void {
-  return (event: StorageEvent) => {
-    if (event.storageArea === storage) {
-      if (event.key === key && event.newValue !== event.oldValue) {
-        let newValue = event.newValue;
-        if (!newValue) {
-          newValue = '{}';
-        }
-        onUpdate(JSON.parse(newValue), observable);
-      }
-    }
-  };
-}
-
-function createInitialValueLoader<T>(key: string, storage: Storage, value: T): () => void {
-  let loaded: boolean = false;
-  return action(() => {
-    if (!loaded) {
-      const loadedValue = getItem<T>(key, storage, toJS(value));
-      Object.assign(value, loadedValue);
-      loaded = true;
-    }
-  });
-}
-
-function setItem<T>(key: string, value: T, storage: Storage): void {
-  try {
-    storage.setItem(key, JSON.stringify(value));
-  } catch (error) {
-    console.log({ storage, key }, `Unable to write to storage: ${error.message}`);
-    console.log(error);
-  }
-}
-
-function customizer(objValue: any, srcValue: any): any {
-  if (objValue && !srcValue) {
-    return objValue;
-  }
-  if (srcValue) {
-    return srcValue;
-  }
-}
-
-function getItem<T>(key: string, storage: Storage, currentValue?: T): T {
-  try {
-    const fromStorageRaw = storage.getItem(key);
-    if (fromStorageRaw) {
-      const fromStorage = JSON.parse(fromStorageRaw);
-      merge(currentValue, fromStorage, customizer);
-      return currentValue;
-    }
-  } catch (error) {
-    console.log({ storage, key }, `Unable to read from storage: ${error.message}`);
-    console.log(error);
-  }
-  return currentValue;
-}
 
 export default storedObservable;

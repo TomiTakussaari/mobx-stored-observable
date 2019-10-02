@@ -1,32 +1,11 @@
-import 'jest-localstorage-mock';
-import { autorun, configure, runInAction } from 'mobx';
+import { autorun, runInAction } from 'mobx';
 import storedObservable, { StoredObservableOptions } from './stored-observable';
 
-configure({ enforceActions: 'observed' });
 jest.useFakeTimers();
 
 type StorageEventHandler = (storageEvent: Partial<StorageEvent>) => void;
 
-const localStoreValues = new Map<string, string>();
-const sessionStoreValues = new Map<string, string>();
-
-const localStorage = window.localStorage;
-const localStorageSetItem = localStorage.setItem as jest.Mock;
-const localStorageGetItem = localStorage.getItem as jest.Mock;
-const localStorageClear = localStorage.clear as jest.Mock;
-localStorageSetItem.mockImplementation((key: string, value: string) => localStoreValues.set(key, value));
-localStorageGetItem.mockImplementation((key: string) => localStoreValues.get(key));
-localStorageClear.mockImplementation(() => localStoreValues.clear());
-
-const sessionStorage = window.sessionStorage;
-const sessionStorageSetItem = sessionStorage.setItem as jest.Mock;
-const sessionStorageGetItem = sessionStorage.getItem as jest.Mock;
-const sessionStorageClear = sessionStorage.getItem as jest.Mock;
-sessionStorageSetItem.mockImplementation((key: string, value: string) => sessionStoreValues.set(key, value));
-sessionStorageGetItem.mockImplementation((key: string) => sessionStoreValues.get(key));
-sessionStorageClear.mockImplementation(() => sessionStoreValues.clear());
-
-describe('storedObservable function', () => {
+describe('storedObservable', () => {
   let addEventListener: jest.Mock;
   let removeEventListener: jest.Mock;
 
@@ -279,13 +258,13 @@ describe('storedObservable function', () => {
       value.foo = 'bar2';
     });
     jest.runAllTimers();
-    expect(localStoreValues.get('key')).toEqual(JSON.stringify({ foo: 'bar2' }));
+    expect(localStorage.getItem('key')).toEqual(JSON.stringify({ foo: 'bar2' }));
     disposer();
     runInAction(() => {
       value.foo = 'bar3';
     });
     jest.runAllTimers();
-    expect(localStoreValues.get('key')).toEqual(JSON.stringify({ foo: 'bar2' }));
+    expect(localStorage.getItem('key')).toEqual(JSON.stringify({ foo: 'bar2' }));
     expect(value.foo).toEqual('bar3');
   });
 
