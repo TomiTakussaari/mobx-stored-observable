@@ -1,6 +1,6 @@
 {
     "name": "mobx-stored-observable",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "homepage": "https://github.com/TomiTakussaari/mobx-stored-observable",
     "engines": {
         "node": "10"
