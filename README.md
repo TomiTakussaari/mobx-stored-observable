@@ -22,6 +22,16 @@ It persists session state to localStorage, so browser tabs can share it.
 ```typescript 
 import { storedObservable } from 'mobx-stored-observable';
 
+interface StoredObservableOptions<T> {
+  key: string; // key in local/sessionStorage
+  initialValue?: T; // initial value
+  debounce?: number; // how often is data saved to storage
+  storageType?: 'localStorage' | 'sessionStorage';
+  // provide if you want to handle storage update events by yourself.
+  // if given, observable state is not automatically updated based on storage events 
+  handleUpdateFromStorage?: (newValue: T, observable: T & IObservableObject) => void;
+}
+
 class SessionStore {
 
   private readonly _sessionData: SessionData;
@@ -36,6 +46,9 @@ class SessionStore {
       userId: null,
       username: null,
     };
+    const storedObservableOptions: StoredObservableOptions<SessionData = { 
+      initialValue, key: 'session', storageType: 'localStorage'
+   };
     const { value, loadInitialValue, disposer } = storedObservable<SessionData>(
         { initialValue, key: 'session', storageType: 'localStorage'},
     );
@@ -65,7 +78,7 @@ class SessionStore {
     // clear local userinfo state. Other browser tabs will logout user too. 
     this.setSessionData({ name: null, userId: null, username: null });
 
-    // stop persiting changes to localstorage, and tracking changes
+    // stop persiting changes to localstorage and stop listening localStorage changes
     this.disposer();
   }
   
