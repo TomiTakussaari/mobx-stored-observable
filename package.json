@@ -32,18 +32,27 @@
     ],
     "devDependencies": {
         "@smartive/tslint-config": "7.0.1",
+        "@types/enzyme": "^3.10.3",
+        "@types/enzyme-adapter-react-16": "^1.0.5",
         "@types/jest": "24.0.18",
         "@types/lodash": "^4.14.141",
+        "@types/react": "^16.9.11",
+        "@types/react-dom": "^16.9.4",
+        "enzyme": "^3.10.0",
+        "enzyme-adapter-react-16": "^1.15.1",
         "husky": "3.0.4",
         "jest": "24.9.0",
         "jest-localstorage-mock": "^2.4.0",
         "jest-transform-stub": "^2.0.0",
         "lint-staged": "9.2.3",
+        "mobx-react-lite": "^1.5.0",
+        "react": "^16.11.0",
+        "react-dom": "^16.11.0",
         "ts-jest": "24.1.0",
         "ts-node": "8.4.1",
         "tslint": "5.20.0",
         "tslint-config-prettier": "1.18.0",
-        "typescript": "3.6.3"
+        "typescript": "3.7.2"
     },
     "jest": {
         "globals": {
@@ -93,5 +102,9 @@
         "hooks": {
             "pre-commit": "lint-staged"
         }
+    },
+    "peerDependencies": {
+        "mobx-react-lite": "^1.5.0",
+        "react": "^16.11.0"
     }
 }

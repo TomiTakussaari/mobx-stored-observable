@@ -1,7 +1,10 @@
+import { configure as configureEnzyme } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 import 'jest-localstorage-mock';
 import { configure } from 'mobx';
 
 configure({ enforceActions: 'observed' });
+configureEnzyme({ adapter: new Adapter() });
 
 /**
  * jest-localstorage-mock does not seem to handle all cases as of now, so lets do it ourselves...

@@ -6,6 +6,7 @@
         "**/*.test.*"
     ],
     "compilerOptions": {
+        "jsx": "react",
         "outDir": "./lib",
         "target": "es2016",
         "module": "commonjs",
@@ -21,7 +22,7 @@
         "preserveConstEnums": true,
         "sourceMap": true,
         "skipLibCheck": true,
-        "rootDirs": ["src", "stories"],
+        "rootDirs": ["src"],
         "baseUrl": "src",
         "typeRoots": [
             "./node_modules/@types",

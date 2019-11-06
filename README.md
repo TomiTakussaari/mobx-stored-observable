@@ -89,6 +89,41 @@ class SessionStore {
   }
 ```
 
+#### React
+```typescript
+import { runInAction } from 'mobx';
+import { useObserver } from 'mobx-react-lite';
+import { useStoredStore } from 'mobx-stored-observable/react';
+
+const TodoComponent: React.FunctionComponent<{ storageKey: string }> = ({ storageKey }) => {
+  const todo = useStoredStore({
+    key: storageKey,
+    debounce: 1,
+    getInitialValue: () => ({
+      title: 'Click to toggle',
+      done: false,
+      toggle(): void {
+        runInAction(() => {
+          this.done = this.done !== true;
+        });
+      },
+      get isDone(): string {
+        return this.done ? 'YES' : 'NO';
+      },
+    }),
+  });
+  return useObserver(() => (
+    <div>
+      <h3 onClick={todo.toggle}>
+        {todo.title}
+      </h3>
+      <p>Toggled: {todo.isDone}</p>
+    </div>
+  ));
+};
+
+```
+
 ### Compatibility
 
 Should work in modern browsers. LocalStorage might be disabled/unusable in private browsing modes in certain browsers.

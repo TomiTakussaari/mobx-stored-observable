@@ -1,5 +1,5 @@
 import noop from 'lodash/noop';
-import { autorun, IObservableObject, observable, runInAction } from 'mobx';
+import { autorun, IObservableObject, isObservable, observable, runInAction } from 'mobx';
 import getStorage, { StorageType } from './get-web-storage';
 import {
   createInitialValueLoader,
@@ -29,7 +29,8 @@ export function storedObservable<T>(options: StoredObservableOptions<T>): Stored
   const { storageType, key, handleUpdateFromStorage, initialValue, debounce } = mergedOptions;
   const storage = getStorage(storageType);
 
-  const obsVal = observable(initialValue);
+  const value = typeof initialValue === 'function' ? initialValue() : initialValue;
+  const obsVal = isObservable(value) ? value :  observable(value);
   if (typeof storage === 'object' && typeof window === 'object' && typeof window.addEventListener === 'function') {
 
     const loadInitialValueFromStorage = createInitialValueLoader(key, storage, obsVal);
