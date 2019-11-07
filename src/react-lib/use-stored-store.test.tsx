@@ -31,6 +31,14 @@ const TestingComponent: React.FunctionComponent<{ storageKey: string }> = ({ sto
   ));
 };
 
+let addEventListener: jest.Mock;
+let removeEventListener: jest.Mock;
+
+beforeEach(() => {
+  addEventListener = window.addEventListener = jest.fn();
+  removeEventListener = window.removeEventListener = jest.fn();
+});
+
 afterEach(() => {
   localStorage.clear();
   sessionStorage.clear();
@@ -65,6 +73,14 @@ it('does not share state between multiple components with different key', async 
   await waitForLocalStorageUpdates();
   const wrapperTwo = mount(<TestingComponent storageKey="keyTwo"/>);
   expect(wrapperTwo.find('p').text()).toEqual('Toggled: NO');
+});
+
+it('creates storage event listener on mount and removes it on unmount', async () => {
+  const wrapper = mount(<TestingComponent storageKey="keyOne"/>);
+  expect(addEventListener).toHaveBeenCalledWith('storage', expect.any(Function), false);
+  expect(removeEventListener).not.toHaveBeenCalledWith('storage', expect.any(Function), expect.anything());
+  wrapper.unmount();
+  expect(removeEventListener).toHaveBeenCalledWith('storage', expect.any(Function), false);
 });
 
 async function waitForLocalStorageUpdates(): Promise<void> {
