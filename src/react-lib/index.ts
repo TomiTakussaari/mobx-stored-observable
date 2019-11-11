@@ -1,1 +1,1 @@
-export { default as useStoredStore } from './use-stored-store';
+export { default as usePersistedStore } from './use-persisted-store';

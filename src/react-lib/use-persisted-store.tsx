@@ -11,7 +11,7 @@ export interface UseStoredObservableOptions<T> {
   storageType?: StorageType;
 }
 
-export default function useStoredStore<T>(options: UseStoredObservableOptions<T>): T & IObservableObject {
+export default function usePersistedStore<T>(options: UseStoredObservableOptions<T>): T & IObservableObject {
   const { getInitialValue, ...otherOptions } = options;
   const localStore = useLocalStore<T>(getInitialValue);
   const modifiedOptions = { ...otherOptions, initialValue: localStore };

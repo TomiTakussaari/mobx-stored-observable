@@ -93,10 +93,10 @@ class SessionStore {
 ```typescript
 import { runInAction } from 'mobx';
 import { useObserver } from 'mobx-react-lite';
-import { useStoredStore } from 'mobx-stored-observable/react';
+import { usePersistedStore } from 'mobx-stored-observable/react';
 
 const TodoComponent: React.FunctionComponent<{ storageKey: string }> = ({ storageKey }) => {
-  const todo = useStoredStore({
+  const todo = usePersistedStore({
     key: storageKey,
     debounce: 1,
     getInitialValue: () => ({

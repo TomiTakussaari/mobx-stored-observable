@@ -2,10 +2,10 @@ import { mount } from 'enzyme';
 import { runInAction } from 'mobx';
 import { useObserver } from 'mobx-react-lite';
 import React from 'react';
-import { useStoredStore } from './';
+import { usePersistedStore } from './';
 
 const TestingComponent: React.FunctionComponent<{ storageKey: string }> = ({ storageKey }) => {
-  const todo = useStoredStore({
+  const todo = usePersistedStore({
     key: storageKey,
     debounce: 1,
     getInitialValue: () => ({
