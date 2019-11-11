@@ -97,8 +97,9 @@ import { usePersistedStore } from 'mobx-stored-observable/react';
 
 const TodoComponent: React.FunctionComponent<{ storageKey: string }> = ({ storageKey }) => {
   const todo = usePersistedStore({
-    key: storageKey,
-    debounce: 1,
+    key: storageKey, // what key to use in DOM storage
+    debounce: 1, // milliseconds, how often to persist changes to DOM storage
+    storageType: 'localStorage', // or sessionStorage
     getInitialValue: () => ({
       title: 'Click to toggle',
       done: false,
